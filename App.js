@@ -63,8 +63,8 @@ export default function App() {
   }, [events, location]);
 
   return (
-    <NavigationContainer>
-      <ThemeProvider>
+    <ThemeProvider>
+      <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ color, size }) => {
@@ -78,11 +78,15 @@ export default function App() {
 
               return <Icon name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: 'tomato',
+            tabBarActiveTintColor: useContext(ThemeContext).isDarkMode ? 'purple' : 'tomato',
             tabBarInactiveTintColor: 'gray',
             tabBarStyle: {
-              display: 'flex',
+              backgroundColor: useContext(ThemeContext).isDarkMode ? '#000' : '#fff',
             },
+            headerStyle: {
+              backgroundColor: useContext(ThemeContext).isDarkMode ? '#000' : '#fff',
+            },
+            headerTintColor: useContext(ThemeContext).isDarkMode ? '#fff' : '#000',
           })}
         >
           <Tab.Screen name="Home" options={{ title: 'Home' }}>
@@ -92,8 +96,8 @@ export default function App() {
           </Tab.Screen>
           <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
         </Tab.Navigator>
-      </ThemeProvider>
-    </NavigationContainer>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
 
