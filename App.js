@@ -81,12 +81,12 @@ export default function App() {
             tabBarActiveTintColor: useContext(ThemeContext).isDarkMode ? 'purple' : 'tomato',
             tabBarInactiveTintColor: 'gray',
             tabBarStyle: {
-              backgroundColor: useContext(ThemeContext).isDarkMode ? '#000' : '#fff',
+              backgroundColor: useContext(ThemeContext).isDarkMode ? '#121212' : '#ffffff',
             },
             headerStyle: {
-              backgroundColor: useContext(ThemeContext).isDarkMode ? '#000' : '#fff',
+              backgroundColor: useContext(ThemeContext).isDarkMode ? '#121212' : '#f8f8f8',
             },
-            headerTintColor: useContext(ThemeContext).isDarkMode ? '#fff' : '#000',
+            headerTintColor: useContext(ThemeContext).isDarkMode ? '#ffffff' : '#000000',
           })}
         >
           <Tab.Screen name="Home" options={{ title: 'Home' }}>
@@ -105,7 +105,7 @@ const HomeScreen = ({ events, location, loading, errorMsg }) => {
   const { isDarkMode } = useContext(ThemeContext);
 
   return (
-    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
+    <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
       <MapViewComponent events={events} location={location} loading={loading} errorMsg={errorMsg} />
     </View>
   );
@@ -115,7 +115,7 @@ const MapViewComponent = ({ events, location, loading, errorMsg }) => {
   const { isDarkMode } = useContext(ThemeContext);
 
   return (
-    <View style={[styles.mapContainer, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
+    <View style={[styles.mapContainer, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
       {loading ? (
         <Text style={isDarkMode ? styles.darkText : styles.text}>Loading map...</Text>
       ) : (
@@ -153,7 +153,7 @@ const MapViewComponent = ({ events, location, loading, errorMsg }) => {
           )}
         </>
       )}
-      <StatusBar style="auto" />
+      <StatusBar style={isDarkMode ? "light" : "dark"} />
     </View>
   );
 };
@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   text: {
-    color: '#000',
+    color: '#000000',
     fontSize: 18,
     marginBottom: 10,
   },
   darkText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 18,
     marginBottom: 10,
   },

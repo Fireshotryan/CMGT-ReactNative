@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { View, Text, Switch, StyleSheet } from 'react-native';
-import { ThemeContext } from './ThemeContext'; // Import ThemeContext
+import { ThemeContext } from './ThemeContext'; 
 
 const SettingsScreen = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
+    <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
       <Text style={isDarkMode ? styles.darkText : styles.text}>Dark Mode</Text>
       <Switch
         value={isDarkMode}
@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    color: '#000',
+    color: '#000000',
     fontSize: 18,
     marginBottom: 10,
   },
   darkText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 18,
     marginBottom: 10,
   },
