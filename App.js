@@ -21,7 +21,7 @@ LogBox.ignoreLogs([
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const HomeStack = ({ favoriteEvents, setFavoriteEvents }) => {
+const EventFinderStack = ({ favoriteEvents, setFavoriteEvents }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -229,7 +229,7 @@ export default function App() {
             screenOptions={({ route }) => ({
               tabBarIcon: ({ color, size }) => {
                 let iconName;
-                if (route.name === 'HomeStack') {
+                if (route.name === 'EventFinder') {
                   iconName = 'home';
                 } else if (route.name === 'Settings') {
                   iconName = 'settings';
@@ -249,8 +249,8 @@ export default function App() {
               headerTintColor: useContext(ThemeContext).isDarkMode ? '#ffffff' : '#000000',
             })}
           >
-            <Tab.Screen name="HomeStack">
-              {() => <HomeStack favoriteEvents={favoriteEvents} setFavoriteEvents={setFavoriteEvents} />}
+            <Tab.Screen name="EventFinder">
+              {() => <EventFinderStack favoriteEvents={favoriteEvents} setFavoriteEvents={setFavoriteEvents} />}
             </Tab.Screen>
             <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
             <Tab.Screen name="Favorites">
