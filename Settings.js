@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, Switch, StyleSheet } from 'react-native';
-import { ThemeContext } from './ThemeContext'; 
+import { ThemeContext } from './ThemeContext';
 
 const SettingsScreen = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
