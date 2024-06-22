@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer, useNavigation, useIsFocused } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeProvider, ThemeContext } from './ThemeContext';
 import SettingsScreen from './Settings';
 import FavoritesScreen from './Favorites';
 import EventDetail from './EventDetail';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import i18n from './i18n'; // Import i18n for translations
 import { LogBox } from 'react-native';
 import { FavoritesProvider } from './FavoritesContext';
 
@@ -22,6 +23,8 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const EventFinderStack = ({ favoriteEvents, setFavoriteEvents }) => {
+  const isFocused = useIsFocused(); // Check if the screen is focused
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -34,7 +37,7 @@ const EventFinderStack = ({ favoriteEvents, setFavoriteEvents }) => {
         name="EventDetail"
         component={EventDetail}
         options={{ 
-          title: 'Event Detail',
+          title: i18n.t('eventDetail'),
           headerStyle: {
             backgroundColor: useContext(ThemeContext).isDarkMode ? '#121212' : '#f8f8f8',
           },
@@ -133,7 +136,7 @@ const MapViewComponent = ({ events, location, loading, errorMsg, navigation }) =
   return (
     <View style={[styles.mapContainer, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
       {loading ? (
-        <Text style={isDarkMode ? styles.darkText : styles.text}>Loading map...</Text>
+        <Text style={isDarkMode ? styles.darkText : styles.text}>{i18n.t('loadingMap')}</Text>
       ) : (
         <>
           {errorMsg ? (
@@ -163,7 +166,7 @@ const MapViewComponent = ({ events, location, loading, errorMsg, navigation }) =
                   ))}
                 </MapView>
               ) : (
-                <Text style={isDarkMode ? styles.darkText : styles.text}>No events found or location not available.</Text>
+                <Text style={isDarkMode ? styles.darkText : styles.text}>{i18n.t('noEventsFound')}</Text>
               )}
             </>
           )}
@@ -185,13 +188,13 @@ const MapViewComponent = ({ events, location, loading, errorMsg, navigation }) =
                 style={[styles.button, { backgroundColor: 'green' }]}
                 onPress={handleYes}
               >
-                <Text style={styles.buttonText}>Yes</Text>
+                <Text style={styles.buttonText}>{i18n.t('yes')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: 'red' }]}
                 onPress={closeModal}
               >
-                <Text style={styles.buttonText}>No</Text>
+                <Text style={styles.buttonText}>{i18n.t('no')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -203,6 +206,7 @@ const MapViewComponent = ({ events, location, loading, errorMsg, navigation }) =
 
 export default function App() {
   const [favoriteEvents, setFavoriteEvents] = useState([]);
+  const [languageChanged, setLanguageChanged] = useState(false); // State to trigger re-render on language change
 
   useEffect(() => {
     // Retrieve favorite events from AsyncStorage on app startup
@@ -219,6 +223,19 @@ export default function App() {
     };
 
     retrieveFavorites();
+  }, []);
+
+  // Subscribe to language change event to trigger re-render
+  useEffect(() => {
+    const onLanguageChange = () => {
+      setLanguageChanged(prev => !prev); // Toggle state to force re-render
+    };
+
+    i18n.on('languageChanged', onLanguageChange);
+
+    return () => {
+      i18n.off('languageChanged', onLanguageChange); // Clean up listener
+    };
   }, []);
 
   return (
@@ -247,12 +264,32 @@ export default function App() {
                 backgroundColor: useContext(ThemeContext).isDarkMode ? '#121212' : '#f8f8f8',
               },
               headerTintColor: useContext(ThemeContext).isDarkMode ? '#ffffff' : '#000000',
+              tabBarLabel: ({ focused, color }) => {
+                const routeName = route.name;
+                let label;
+                switch (routeName) {
+                  case 'EventFinder':
+                    label = i18n.t('eventFinder');
+                    break;
+                  case 'Settings':
+                    label = i18n.t('settings');
+                    break;
+                  case 'Favorites':
+                    label = i18n.t('favorites');
+                    break;
+                  default:
+                    label = routeName;
+                }
+                return <Text style={{ color }}>{label}</Text>;
+              },
             })}
+            // Add key to force re-render on language change
+            key={languageChanged ? 'languageChanged' : 'noChange'}
           >
             <Tab.Screen name="EventFinder">
               {() => <EventFinderStack favoriteEvents={favoriteEvents} setFavoriteEvents={setFavoriteEvents} />}
             </Tab.Screen>
-            <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
+            <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: i18n.t('settings') }} />
             <Tab.Screen name="Favorites">
               {() => <FavoritesScreen favoriteEvents={favoriteEvents} />}
             </Tab.Screen>

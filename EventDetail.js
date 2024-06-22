@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next'; // Import useTranslation hook
 import { ThemeContext } from './ThemeContext';
 import { FavoritesContext } from './FavoritesContext';
 
 const EventDetail = ({ route }) => {
+  const { t } = useTranslation(); // Use useTranslation hook
   const { event } = route.params || {};
   const { isDarkMode } = useContext(ThemeContext);
   const { addFavorite, removeFavorite, isFavorite } = useContext(FavoritesContext);
@@ -28,7 +30,7 @@ const EventDetail = ({ route }) => {
       <Text style={isDarkMode ? styles.darkText : styles.text}>{event?.title}</Text>
       <Text style={isDarkMode ? styles.darkText : styles.text}>{event?.description}</Text>
       <Text style={isDarkMode ? styles.darkText : styles.text}>
-        Location: {event?.latitude}, {event?.longitude}
+        {t('location')}: {event?.latitude}, {event?.longitude}
       </Text>
       <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteContainer}>
         <Icon 
@@ -37,7 +39,7 @@ const EventDetail = ({ route }) => {
           color={favoriteStatus ? 'red' : (isDarkMode ? '#ffffff' : '#000000')} 
         />
         <Text style={[styles.favoriteText, { color: favoriteStatus ? 'red' : (isDarkMode ? '#ffffff' : '#000000') }]}>
-          {favoriteStatus ? 'Remove from Favorites' : 'Add to Favorites'}
+          {favoriteStatus ? t('removeFromFavorites') : t('addToFavorites')}
         </Text>
       </TouchableOpacity>
     </View>

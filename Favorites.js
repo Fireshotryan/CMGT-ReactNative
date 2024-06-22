@@ -1,16 +1,18 @@
 import React, { useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useTranslation } from 'react-i18next'; // Import useTranslation hook
 import { ThemeContext } from './ThemeContext';
 import { FavoritesContext } from './FavoritesContext';
 
 const FavoritesScreen = () => {
+  const { t } = useTranslation(); // Use useTranslation hook
   const { isDarkMode } = useContext(ThemeContext);
   const { favoriteEvents, removeFavorite } = useContext(FavoritesContext);
 
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
-      <Text style={isDarkMode ? styles.darkTitle : styles.title}>Favorites Screen</Text>
+      <Text style={isDarkMode ? styles.darkTitle : styles.title}>{t('favoritesScreen')}</Text>
       <FlatList
         data={favoriteEvents}
         keyExtractor={(item) => item.id.toString()}
@@ -28,7 +30,7 @@ const FavoritesScreen = () => {
             </TouchableOpacity>
           </View>
         )}
-        ListEmptyComponent={<Text style={isDarkMode ? styles.darkEmptyText : styles.emptyText}>No favorite events yet.</Text>}
+        ListEmptyComponent={<Text style={isDarkMode ? styles.darkEmptyText : styles.emptyText}>{t('noFavoriteEvents')}</Text>}
       />
     </View>
   );
