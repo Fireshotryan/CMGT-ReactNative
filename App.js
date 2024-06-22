@@ -56,7 +56,7 @@ const HomeScreen = ({ navigation, route }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://stud.hosted.hr.nl/1052755/events.json');
+        const response = await fetch('https://stud.hosted.hr.nl/1052755/event.json');
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }

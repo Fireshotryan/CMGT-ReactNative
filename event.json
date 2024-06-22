@@ -1,0 +1,74 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "TwitchCon",
+      "description": "Gaming convention at Rotterdam Ahoy",
+      "latitude": 51.8824,
+      "longitude": 4.4861
+    },
+    {
+      "id": 2,
+      "title": "Comic-Con",
+      "description": "Comic book convention at San Diego Convention Center",
+      "latitude": 32.7066,
+      "longitude": -117.1611
+    },
+    {
+      "id": 3,
+      "title": "E3 Expo",
+      "description": "Electronic Entertainment Expo at Los Angeles Convention Center",
+      "latitude": 34.0404,
+      "longitude": -118.2690
+    },
+    {
+      "id": 4,
+      "title": "Dutch Comic Con",
+      "description": "Comic book convention at the Broodfabriek",
+      "latitude": 52.0416,
+      "longitude": 4.3166
+    },
+    {
+      "id": 5,
+      "title": "Gamescom",
+      "description": "Gaming convention at Koelnmesse",
+      "latitude": 50.9463,
+      "longitude": 6.9833
+    },
+    {
+      "id": 6,
+      "title": "Paris Games Week",
+      "description": "Gaming convention at Paris Expo Porte de Versailles",
+      "latitude": 48.8302,
+      "longitude": 2.2877
+    },
+    {
+      "id": 7,
+      "title": "Barcelona Games World",
+      "description": "Gaming convention at Fira Barcelona",
+      "latitude": 41.3548,
+      "longitude": 2.1262
+    },
+    {
+      "id": 8,
+      "title": "Milan Games Week",
+      "description": "Gaming convention at Fiera Milano Rho",
+      "latitude": 45.5235,
+      "longitude": 9.0852
+    },
+    {
+      "id": 9,
+      "title": "EGX",
+      "description": "Gaming convention at ExCeL London",
+      "latitude": 51.5074,
+      "longitude": 0.0295
+    },
+    {
+      "id": 10,
+      "title": "Vienna Comic Con",
+      "description": "Comic book convention at Messe Wien Exhibition & Congress Center",
+      "latitude": 48.2131,
+      "longitude": 16.4144
+    }
+  ]
+}

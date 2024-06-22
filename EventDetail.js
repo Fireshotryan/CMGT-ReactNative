@@ -27,9 +27,16 @@ const EventDetail = ({ route }) => {
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
       <Text style={isDarkMode ? styles.darkText : styles.text}>{event?.title}</Text>
       <Text style={isDarkMode ? styles.darkText : styles.text}>{event?.description}</Text>
+      <Text style={isDarkMode ? styles.darkText : styles.text}>
+        Location: {event?.latitude}, {event?.longitude}
+      </Text>
       <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteContainer}>
-        <Icon name={favoriteStatus ? 'heart' : 'heart-outline'} size={30} color={favoriteStatus ? 'red' : 'black'} />
-        <Text style={[styles.favoriteText, { color: favoriteStatus ? 'red' : 'black' }]}>
+        <Icon 
+          name={favoriteStatus ? 'heart' : 'heart-outline'} 
+          size={30} 
+          color={favoriteStatus ? 'red' : (isDarkMode ? '#ffffff' : '#000000')} 
+        />
+        <Text style={[styles.favoriteText, { color: favoriteStatus ? 'red' : (isDarkMode ? '#ffffff' : '#000000') }]}>
           {favoriteStatus ? 'Remove from Favorites' : 'Add to Favorites'}
         </Text>
       </TouchableOpacity>
