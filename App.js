@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,7 +8,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as Location from 'expo-location';
 import { ThemeProvider, ThemeContext } from './ThemeContext';
 import SettingsScreen from './Settings';
-import { useNavigation } from '@react-navigation/native'; // Import navigation hook
+import { useNavigation } from '@react-navigation/native';
+import FavoritesScreen from './Favorites'; // Import FavoritesScreen component
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -19,6 +19,7 @@ export default function App() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [favoriteEvents, setFavoriteEvents] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,50 +69,57 @@ export default function App() {
   return (
     <ThemeProvider>
       <NavigationContainer>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ color, size }) => {
-              let iconName;
+      <Tab.Navigator
+  screenOptions={({ route }) => ({
+    tabBarIcon: ({ color, size }) => {
+      let iconName;
+      if (route.name === 'HomeStack') {
+        iconName = 'home';
+      } else if (route.name === 'Settings') {
+        iconName = 'settings';
+      } else if (route.name === 'Favorites') {
+        iconName = 'heart';
+      }
+      return <Icon name={iconName} size={size} color={color} />;
+    },
+    tabBarActiveTintColor: useContext(ThemeContext).isDarkMode ? 'purple' : 'tomato',
+    tabBarInactiveTintColor: 'gray',
+    tabBarStyle: {
+      backgroundColor: useContext(ThemeContext).isDarkMode ? '#121212' : '#ffffff',
+    },
+    headerStyle: {
+      backgroundColor: useContext(ThemeContext).isDarkMode ? '#121212' : '#f8f8f8',
+    },
+    headerTintColor: useContext(ThemeContext).isDarkMode ? '#ffffff' : '#000000',
+  })}
+>
+  <Tab.Screen name="HomeStack">
+    {() => <HomeStack favoriteEvents={favoriteEvents} setFavoriteEvents={setFavoriteEvents} />}
+  </Tab.Screen>
+  <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
+  <Tab.Screen name="Favorites">
+    {() => <FavoritesScreen favoriteEvents={favoriteEvents} />}
+  </Tab.Screen>
+</Tab.Navigator>
 
-              if (route.name === 'HomeStack') {
-                iconName = 'home';
-              } else if (route.name === 'Settings') {
-                iconName = 'settings';
-              }
-
-              return <Icon name={iconName} size={size} color={color} />;
-            },
-            tabBarActiveTintColor: useContext(ThemeContext).isDarkMode ? 'purple' : 'tomato',
-            tabBarInactiveTintColor: 'gray',
-            tabBarStyle: {
-              backgroundColor: useContext(ThemeContext).isDarkMode ? '#121212' : '#ffffff',
-            },
-            headerStyle: {
-              backgroundColor: useContext(ThemeContext).isDarkMode ? '#121212' : '#f8f8f8',
-            },
-            headerTintColor: useContext(ThemeContext).isDarkMode ? '#ffffff' : '#000000',
-          })}
-        >
-          <Tab.Screen name="HomeStack" component={HomeStack} options={{ title: 'Home' }} />
-          <Tab.Screen name="Settings" component={SettingsScreen} options={{ title: 'Settings' }} />
-        </Tab.Navigator>
       </NavigationContainer>
     </ThemeProvider>
   );
 }
 
-const HomeStack = () => {
+const HomeStack = ({ favoriteEvents, setFavoriteEvents }) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{ headerShown: false }} // Hide the header for the "Home" screen
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="EventDetail"
         component={EventDetail}
         options={{ title: 'Event Detail' }}
+        initialParams={{ favoriteEvents, setFavoriteEvents }}
       />
     </Stack.Navigator>
   );
@@ -199,7 +207,9 @@ const MapViewComponent = ({ events, location, loading, errorMsg }) => {
 
   const handleYes = () => {
     closeModal(); // Close modal
-    navigation.navigate('EventDetail', { event: selectedEvent }); // Navigate to EventDetail with selected event
+    navigation.navigate('EventDetail', { event: selectedEvent });
+
+
   };
 
   return (
@@ -258,7 +268,7 @@ const MapViewComponent = ({ events, location, loading, errorMsg }) => {
                 style={[styles.button, { backgroundColor: 'green' }]}
                 onPress={handleYes} // Navigate to EventDetail on Yes
               >
-                <Text style={styles.buttonText}>Yes</Text>
+                                <Text style={styles.buttonText}>Yes</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: 'red' }]}
@@ -275,16 +285,55 @@ const MapViewComponent = ({ events, location, loading, errorMsg }) => {
 };
 
 const EventDetail = ({ route }) => {
-  const { event } = route.params;
+  const { event } = route.params || {};
   const { isDarkMode } = useContext(ThemeContext);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const { favoriteEvents, setFavoriteEvents } = route.params || {};
+
+  useEffect(() => {
+    console.log('Event:', event);
+    console.log('Favorite Events:', favoriteEvents);
+
+    if (favoriteEvents && event) {
+      // Check if the event is already in favorites
+      const found = favoriteEvents.some((favEvent) => favEvent.id === event.id);
+      setIsFavorite(found);
+    }
+  }, [event, favoriteEvents]);
+
+  // Function to toggle favorite status
+const toggleFavorite = () => {
+  if (favoriteEvents) {
+    const index = favoriteEvents.findIndex((favEvent) => favEvent.id === event?.id);
+    if (index === -1) {
+      // Event is not in favorites, add it
+      setFavoriteEvents([...favoriteEvents, event]);
+    } else {
+      // Event is already in favorites, remove it
+      const updatedFavorites = [...favoriteEvents];
+      updatedFavorites.splice(index, 1);
+      setFavoriteEvents(updatedFavorites);
+    }
+  }
+};
 
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
-      <Text style={isDarkMode ? styles.darkText : styles.text}>{event.title}</Text>
-      <Text style={isDarkMode ? styles.darkText : styles.text}>{event.description}</Text>
+      <Text style={isDarkMode ? styles.darkText : styles.text}>{event?.title}</Text>
+      <Text style={isDarkMode ? styles.darkText : styles.text}>{event?.description}</Text>
+      <TouchableOpacity
+        style={[styles.button, { backgroundColor: isFavorite ? 'gold' : '#ccc' }]}
+        onPress={toggleFavorite}
+      >
+        <Text style={styles.buttonText}>{isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
+
+
+
+
 
 const styles = StyleSheet.create({
   container: {
