@@ -1,37 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FavoritesContext } from './FavoritesContext';
 
 const FavoritesScreen = () => {
-  const [favoriteEvents, setFavoriteEvents] = useState([]);
-
-  useEffect(() => {
-    // Load favorite events from AsyncStorage on component mount
-    loadFavoriteEvents();
-  }, []);
-
-  const loadFavoriteEvents = async () => {
-    try {
-      const storedFavorites = await AsyncStorage.getItem('favoriteEvents');
-      if (storedFavorites !== null) {
-        const parsedFavorites = JSON.parse(storedFavorites);
-        setFavoriteEvents(parsedFavorites);
-      }
-    } catch (error) {
-      console.error('Error loading favorite events:', error);
-    }
-  };
-
-  const removeFavoriteEvent = async (eventId) => {
-    try {
-      let updatedFavorites = favoriteEvents.filter(event => event.id !== eventId);
-      setFavoriteEvents(updatedFavorites);
-      await AsyncStorage.setItem('favoriteEvents', JSON.stringify(updatedFavorites));
-    } catch (error) {
-      console.error('Error removing favorite event:', error);
-    }
-  };
+  const { favoriteEvents, removeFavorite } = useContext(FavoritesContext);
 
   return (
     <View style={styles.container}>
@@ -47,7 +20,7 @@ const FavoritesScreen = () => {
             </View>
             <TouchableOpacity
               style={styles.favoriteIcon}
-              onPress={() => removeFavoriteEvent(item.id)}
+              onPress={() => removeFavorite(item.id)}
             >
               <Icon name="heart" size={24} color="gold" />
             </TouchableOpacity>
