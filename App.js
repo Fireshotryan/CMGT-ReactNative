@@ -33,7 +33,13 @@ const HomeStack = ({ favoriteEvents, setFavoriteEvents }) => {
       <Stack.Screen
         name="EventDetail"
         component={EventDetail}
-        options={{ title: 'Event Detail' }}
+        options={{ 
+          title: 'Event Detail',
+          headerStyle: {
+            backgroundColor: useContext(ThemeContext).isDarkMode ? '#121212' : '#f8f8f8',
+          },
+          headerTintColor: useContext(ThemeContext).isDarkMode ? '#ffffff' : '#000000',
+        }}
         initialParams={{ favoriteEvents, setFavoriteEvents }}
       />
     </Stack.Navigator>
