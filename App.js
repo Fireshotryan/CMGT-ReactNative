@@ -161,6 +161,8 @@ const MapViewComponent = ({ events, location, loading, errorMsg, navigation }) =
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                   }}
+                  showsUserLocation={true} // Display user's location
+                  followsUserLocation={true} // Adjust map region to follow user's location
                 >
                   {events.map(event => (
                     <Marker
