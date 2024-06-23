@@ -1,21 +1,21 @@
 import React, { useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useTranslation } from 'react-i18next'; // Import useTranslation hook
-import { ThemeContext } from './ThemeContext';
-import { FavoritesContext } from './FavoritesContext';
+import { useTranslation } from 'react-i18next'; 
+import { ThemeContext } from './ThemeContext'; 
+import { FavoritesContext } from './FavoritesContext'; 
 
 const FavoritesScreen = () => {
-  const { t } = useTranslation(); // Use useTranslation hook
-  const { isDarkMode } = useContext(ThemeContext);
-  const { favoriteEvents, removeFavorite } = useContext(FavoritesContext);
+  const { t } = useTranslation(); // Gebruik de useTranslation hook om taalspecifieke vertalingen te verkrijgen
+  const { isDarkMode } = useContext(ThemeContext); // Haal isDarkMode en toggleTheme op uit het ThemeContext
+  const { favoriteEvents, removeFavorite } = useContext(FavoritesContext); // Haal favoriteEvents en de removeFavorite functie op uit het FavoritesContext
 
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
       <Text style={isDarkMode ? styles.darkTitle : styles.title}>{t('favoritesScreen')}</Text>
       <FlatList
         data={favoriteEvents}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()} // Gebruik item.id als key voor de lijstitems
         renderItem={({ item }) => (
           <View style={[styles.eventContainer, { borderColor: isDarkMode ? '#444' : '#ccc' }]}>
             <View style={styles.eventInfo}>
@@ -24,13 +24,13 @@ const FavoritesScreen = () => {
             </View>
             <TouchableOpacity
               style={styles.favoriteIcon}
-              onPress={() => removeFavorite(item.id)}
+              onPress={() => removeFavorite(item.id)} // Roep removeFavorite aan bij het indrukken van het hartpictogram
             >
               <Icon name="heart" size={24} color="gold" />
             </TouchableOpacity>
           </View>
         )}
-        ListEmptyComponent={<Text style={isDarkMode ? styles.darkEmptyText : styles.emptyText}>{t('noFavoriteEvents')}</Text>}
+        ListEmptyComponent={<Text style={isDarkMode ? styles.darkEmptyText : styles.emptyText}>{t('noFavoriteEvents')}</Text>} // Tekst weergeven als er geen favoriete evenementen zijn
       />
     </View>
   );

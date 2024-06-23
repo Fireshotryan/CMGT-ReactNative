@@ -1,32 +1,31 @@
-// Settings.js
 import React, { useContext } from 'react';
 import { View, Text, Switch, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import i18n from './i18n'; // Adjust the path based on your project structure
-import { ThemeContext } from './ThemeContext'; // Adjust if you're using context for theme
+import i18n from './i18n'; 
+import { ThemeContext } from './ThemeContext'; 
 
 const SettingsScreen = () => {
   const { t } = useTranslation();
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext); // Adjust based on how theme is managed
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext); // Gebruik de context voor thema
 
+  // Functie om de taal van de app te veranderen
   const changeLanguage = async (language) => {
     await AsyncStorage.setItem('user-language', language);
-    i18n.changeLanguage(language); // Update i18next language immediately
-    // You may need to force a refresh of the app UI or navigate to refresh context
+    i18n.changeLanguage(language); // Update de taal direct in i18next
   };
 
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
       <Text style={isDarkMode ? styles.darkText : styles.text}>{t('settings')}</Text>
       <TouchableOpacity onPress={() => changeLanguage('en')}>
-        <Text style={isDarkMode ? styles.darkText : styles.text}>English</Text>
+        <Text style={isDarkMode ? styles.darkText : styles.text}>Engels</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => changeLanguage('nl')}>
-        <Text style={isDarkMode ? styles.darkText : styles.text}>Dutch</Text>
+        <Text style={isDarkMode ? styles.darkText : styles.text}>Nederlands</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => changeLanguage('de')}>
-        <Text style={isDarkMode ? styles.darkText : styles.text}>German</Text>
+        <Text style={isDarkMode ? styles.darkText : styles.text}>Duits</Text>
       </TouchableOpacity>
       <Text style={isDarkMode ? styles.darkText : styles.text}>{t('darkMode')}</Text>
       <Switch

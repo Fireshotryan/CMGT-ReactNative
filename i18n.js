@@ -2,14 +2,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { I18nManager } from 'react-native';
-import 'intl-pluralrules'; // Import the polyfill for Intl.PluralRules
+import 'intl-pluralrules'; 
 
+// Taal detector configuratie voor i18next
 const languageDetector = {
   type: 'languageDetector',
   async: true,
   detect: async (callback) => {
+    // Haal opgeslagen taalvoorkeur op uit AsyncStorage
     const savedDataJson = await AsyncStorage.getItem('user-language');
-    const selectLanguage = savedDataJson || (I18nManager.isRTL ? 'ar' : 'en'); // Default to English if no language preference is stored
+    const selectLanguage = savedDataJson || (I18nManager.isRTL ? 'ar' : 'en');
     callback(selectLanguage);
   },
   cacheUserLanguage: (lng) => {
@@ -17,13 +19,14 @@ const languageDetector = {
   },
 };
 
+// Initialisatie van i18next met configuratie en vertalingen
 i18n
-  .use(languageDetector)
-  .use(initReactI18next)
+  .use(languageDetector) 
+  .use(initReactI18next) 
   .init({
-    fallbackLng: 'en',
+    fallbackLng: 'en', // Standaardtaal als vertaling niet beschikbaar is
     resources: {
-      en: {
+      en: { // Engelse vertalingen
         translation: {
           darkMode: 'Dark Mode',
           favoritesScreen: 'Favorites Screen',
@@ -40,7 +43,7 @@ i18n
           noFavoriteEvents: 'No favorite events yet.',
         },
       },
-      nl: {
+      nl: { // Nederlandse vertalingen
         translation: {
           darkMode: 'Donkere modus',
           favoritesScreen: 'Favorieten scherm',
@@ -57,7 +60,7 @@ i18n
           noFavoriteEvents: 'Nog geen favoriete evenementen.',
         },
       },
-      de: {
+      de: { // Duitse vertalingen
         translation: {
           darkMode: 'Dunkler Modus',
           favoritesScreen: 'Favoriten Bildschirm',
@@ -76,9 +79,9 @@ i18n
       },
     },
     interpolation: {
-      escapeValue: false,
+      escapeValue: false, 
     },
-    pluralSeparator: '_', // Specify the plural separator for fallback
+    pluralSeparator: '_', 
   });
 
 export default i18n;

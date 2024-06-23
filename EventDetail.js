@@ -1,45 +1,47 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useTranslation } from 'react-i18next'; // Import useTranslation hook
-import { ThemeContext } from './ThemeContext';
+import { useTranslation } from 'react-i18next'; 
+import { ThemeContext } from './ThemeContext'; 
 import { FavoritesContext } from './FavoritesContext';
 
 const EventDetail = ({ route }) => {
-  const { t } = useTranslation(); // Use useTranslation hook
-  const { event } = route.params || {};
-  const { isDarkMode } = useContext(ThemeContext);
+  const { t } = useTranslation();
+  const { event } = route.params || {}; 
+  const { isDarkMode } = useContext(ThemeContext); 
   const { addFavorite, removeFavorite, isFavorite } = useContext(FavoritesContext);
-  const [favoriteStatus, setFavoriteStatus] = useState(false);
+  const [favoriteStatus, setFavoriteStatus] = useState(false); 
 
   useEffect(() => {
+    // Update favoriet status bij verandering in isFavorite of event.id
     setFavoriteStatus(isFavorite(event.id));
   }, [isFavorite, event.id]);
 
+  // Toggle functie voor toevoegen of verwijderen van favoriet
   const toggleFavorite = () => {
     if (favoriteStatus) {
       removeFavorite(event.id);
     } else {
       addFavorite(event);
     }
-    setFavoriteStatus(!favoriteStatus);
+    setFavoriteStatus(!favoriteStatus); 
   };
 
   return (
     <View style={[styles.container, { backgroundColor: isDarkMode ? '#121212' : '#ffffff' }]}>
-      <Text style={isDarkMode ? styles.darkText : styles.text}>{event?.title}</Text>
+      <Text style={isDarkMode ? styles.darkText : styles.text}>{event?.title}</Text> 
       <Text style={isDarkMode ? styles.darkText : styles.text}>{event?.description}</Text>
       <Text style={isDarkMode ? styles.darkText : styles.text}>
-        {t('location')}: {event?.latitude}, {event?.longitude}
+        {t('location')}: {event?.latitude}, {event?.longitude} 
       </Text>
       <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteContainer}>
         <Icon 
-          name={favoriteStatus ? 'heart' : 'heart-outline'} 
+          name={favoriteStatus ? 'heart' : 'heart-outline'}  
           size={30} 
           color={favoriteStatus ? 'red' : (isDarkMode ? '#ffffff' : '#000000')} 
         />
         <Text style={[styles.favoriteText, { color: favoriteStatus ? 'red' : (isDarkMode ? '#ffffff' : '#000000') }]}>
-          {favoriteStatus ? t('removeFromFavorites') : t('addToFavorites')}
+          {favoriteStatus ? t('removeFromFavorites') : t('addToFavorites')} 
         </Text>
       </TouchableOpacity>
     </View>
